@@ -1,0 +1,19 @@
+name: Keep Supabase Alive
+on:
+  schedule:
+    - cron: '0 12 * * 1,4'  # Segunda e Quinta às 12h UTC
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase Edge Function
+        run: |
+          curl -X POST https://abrkczvgkzmieghoufop.supabase.co/functions/v1/bytemax-proxy \
+            -H "apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFicmtjenZna3ptaWVnaG91Zm9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NzQ3MTEsImV4cCI6MjA5MTM1MDcxMX0.yqk4zmpzbBmNHLXFyebfUG92W3FReBzN-nI-T2aqfvs" \
+            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFicmtjenZna3ptaWVnaG91Zm9wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NzQ3MTEsImV4cCI6MjA5MTM1MDcxMX0.yqk4zmpzbBmNHLXFyebfUG92W3FReBzN-nI-T2aqfvs" \
+            -H "Content-Type: application/json" \
+            -d '{"source_currency":"BRL","target_currency":"CNYBM","source_amount":1}' \
+            --max-time 15 || true
+          echo "Ping enviado!"
